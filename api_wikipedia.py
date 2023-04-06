@@ -55,7 +55,7 @@ def main():
         print(f"{results.get('summary')}\n")
         print(f"Outros resultados: {results.get('results')}")
     except wikipedia.exceptions.DisambiguationError as e:
-        print("The search term 'brazilian' is ambiguous. Please choose one of the following options:")
+        print(f"The search term '{topic}' is ambiguous. Please choose one of the following options:")
         for option in e.options:
             print("- " + option)
 
