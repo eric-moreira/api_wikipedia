@@ -2,8 +2,10 @@ import wikipedia
 import nltk
 import json
 from nltk.metrics.distance import jaro_winkler_similarity
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module='wikipedia')
 
-wikipedia.set_lang("pt")
+#wikipedia.set_lang("pt")
 nltk.download('punkt')
 
 # Find the best match using the Jaro-Winkler similarity algorithm
@@ -19,7 +21,6 @@ def find_best_match(input_str, options_list):
 
 
 def get_wiki_info(topic):
-
     results = wikipedia.search(topic)
     # Comente o resto da função e descomente a linha abaixo para testar
     #return json.dumps(results)
@@ -47,12 +48,16 @@ def main():
     topic = input("Qual tópico você deseja pesquisar na Wikipedia? ")
 
     # Obtém as informações da Wikipedia e imprime como JSON
-    wiki_info = get_wiki_info(topic)
-    results = json.loads(wiki_info)
-    print(f"O melhor resultado que encontramos foi: {results.get('best_match')}\n")
-    print(f"{results.get('summary')}\n")
-    print(f"Outros resultados: {results.get('results')}")
-
+    try:
+        wiki_info = get_wiki_info(topic)
+        results = json.loads(wiki_info)
+        print(f"O melhor resultado que encontramos foi: {results.get('best_match')}\n")
+        print(f"{results.get('summary')}\n")
+        print(f"Outros resultados: {results.get('results')}")
+    except wikipedia.exceptions.DisambiguationError as e:
+        print("The search term 'brazilian' is ambiguous. Please choose one of the following options:")
+        for option in e.options:
+            print("- " + option)
 
 if __name__ == '__main__':
     main()
